@@ -46,5 +46,11 @@ int main() {
 	}
 	else
 		printf("não foi possivel resolver o problema\n");
+
+	printf("\nSequecialmente:\n");
+	if(resolver_sequencialmente(pilha, tabuleiro, N)) {
+		printf("resolvido!\n");
+		imprimir_resultado(tabuleiro, N);
+	}
 	return 0;
 }
