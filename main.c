@@ -2,24 +2,18 @@
 #include "quadrado.h"
 #include "algoritmo.h"
 
-int ler_entrada(Quadrado *quadrados[MAXNUMBER]) {
-	int N, i, total;
+PilhaQuadrado *ler_entrada(int *N) {
+	PilhaQuadrado *pilha = NULL;
+	int i, total;
 	int a, b, c, d;
-	scanf("%d", &N);
-	total = N*N;
+	scanf("%d", N);
+	total = (*N)*(*N);
 	for(i=0;i<total;i++) {
 		scanf("%d %d %d %d", &a, &b, &c, &d);
-		quadrados[i] = novo_quadrado(a, b, c, d);
+		pilha = novo_quadrado_na_pilha(pilha, novo_quadrado(a, b, c, d));
 	}
-	return N;
+	return pilha;
 }
-
-void imprimir_saida(Quadrado *quadrados[MAXNUMBER], int N) {
-	int i;
-	for(i=0;i<N*N;i++) {
-		printf("%d %d %d %d\n", quadrados[i]->cima, quadrados[i]->direita, quadrados[i]->baixo, quadrados[i]->esquerda);
-	}
-}	
 
 void imprimir_resultado(QuadradoPosicionado *tabuleiro[MAXNUMBER][MAXNUMBER], const int N) {
 	int i, j;
@@ -40,14 +34,14 @@ void imprimir_resultado(QuadradoPosicionado *tabuleiro[MAXNUMBER][MAXNUMBER], co
 }
 
 int main() {
-	Quadrado *quadrados[MAXNUMBER];
+	PilhaQuadrado *pilha;
 	QuadradoPosicionado *tabuleiro[MAXNUMBER][MAXNUMBER];
 	int N;
-	N = ler_entrada(quadrados);
-	printf("---------------\n");
-	imprimir_saida(quadrados, N);
+
+	pilha = ler_entrada(&N);
+	printf("total de quadrados: %d\n", contar_pilha(pilha));
 	printf("------------resultado\n");
-	if(resolver(0, 0, quadrados, tabuleiro, N)) {
+	if(resolver(0, 0, pilha, tabuleiro, N)) {
 		printf("resolvido!\n");
 		imprimir_resultado(tabuleiro, N);
 	}

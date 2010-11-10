@@ -10,6 +10,11 @@ typedef struct quadrado_posicionado_struct {
 	int rotacao;
 } QuadradoPosicionado;
 
+typedef struct pilha_quadrado_struct {
+	Quadrado *quadrado;
+	struct pilha_quadrado_struct *prox;
+} PilhaQuadrado;
+
 #define GRAU_0 0
 #define GRAU_90 1
 #define GRAU_180 2
@@ -25,3 +30,8 @@ int cor_da_direita(QuadradoPosicionado *posicionado);
 int cor_de_baixo(QuadradoPosicionado *posicionado);
 int cor_da_esquerda(QuadradoPosicionado *posicionado);
 int rotacionar(QuadradoPosicionado *posicionado);
+PilhaQuadrado *novo_quadrado_na_pilha(PilhaQuadrado *pilha, Quadrado *quadrado);
+PilhaQuadrado *trocar_quadrado(PilhaQuadrado *pilha);
+PilhaQuadrado *copiar_pilha(PilhaQuadrado *pilha);
+void apagar_pilha(PilhaQuadrado *pilha);
+int contar_pilha(PilhaQuadrado *pilha);
