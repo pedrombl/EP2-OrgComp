@@ -13,8 +13,6 @@ Quadrado *novo_quadrado(int cima, int direita, int baixo, int esquerda) {
 
 QuadradoPosicionado *nova_posicao(Quadrado *quadrado, int rotacao) {
 	QuadradoPosicionado *posicionado = malloc(sizeof(QuadradoPosicionado));
-	if(quadrado == NULL)
-		printf("ERROR quadrado null\n");
 	posicionado->quadrado = quadrado;
 	posicionado->rotacao = rotacao;
 	return posicionado;
@@ -97,7 +95,6 @@ int cor_da_esquerda(QuadradoPosicionado *posicionado) {
 }
 
 int rotacionar(QuadradoPosicionado *posicionado) {
-	printf("rotacionando\n");
 	if(++(posicionado->rotacao) == 4) {
 		posicionado->rotacao = 0;
 		return FALSE;
@@ -108,10 +105,8 @@ int rotacionar(QuadradoPosicionado *posicionado) {
 
 PilhaQuadrado *pegar_ultimo(PilhaQuadrado *pilha) {
 	PilhaQuadrado *atual = pilha;
-	printf("incio pegar_ultimo\n");
 	while(atual->prox != NULL)
 		atual = atual->prox;
-	printf("fim pegar_ultimo\n");
 	return atual;
 }
 
@@ -129,7 +124,6 @@ PilhaQuadrado *novo_quadrado_na_pilha(PilhaQuadrado *pilha, Quadrado *quadrado) 
 
 PilhaQuadrado *trocar_quadrado(PilhaQuadrado *pilha) {
 	PilhaQuadrado *novo, *ultimo;
-	printf("trocar_quadrado iniciado\n");
 	novo = pilha->prox;
 	if(novo == NULL)
 		return pilha;
@@ -137,7 +131,6 @@ PilhaQuadrado *trocar_quadrado(PilhaQuadrado *pilha) {
 	ultimo = pegar_ultimo(novo);
 	ultimo->prox = pilha;
 	pilha->prox = NULL;
-	printf("fim do trocar_quadrado\n");
 	return novo;
 }
 
@@ -173,11 +166,4 @@ void apagar_pilha(PilhaQuadrado *pilha) {
 		free(pilha);
 		pilha = proximo;
 	}
-}
-
-int contar_pilha(PilhaQuadrado *pilha) {
-	int i;
-	for(i=0;pilha!=NULL;i++)
-		pilha = pilha->prox;
-	return i;
 }

@@ -34,4 +34,3 @@ PilhaQuadrado *novo_quadrado_na_pilha(PilhaQuadrado *pilha, Quadrado *quadrado);
 PilhaQuadrado *trocar_quadrado(PilhaQuadrado *pilha);
 PilhaQuadrado *copiar_pilha(PilhaQuadrado *pilha);
 void apagar_pilha(PilhaQuadrado *pilha);
-int contar_pilha(PilhaQuadrado *pilha);

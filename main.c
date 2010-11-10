@@ -39,7 +39,6 @@ int main() {
 	int N;
 
 	pilha = ler_entrada(&N);
-	printf("total de quadrados: %d\n", contar_pilha(pilha));
 	printf("------------resultado\n");
 	if(resolver(0, 0, pilha, tabuleiro, N)) {
 		printf("resolvido!\n");

@@ -9,15 +9,6 @@ int posicao_valida(const int i, const int j,
 									 QuadradoPosicionado *posicionado,
 									 const int N)
 {
-	printf("posicao valida?\n");
-	if(j != 0 && tabuleiro[i][j-1] == NULL)
-		printf("ERROR posição do tabuleiro vazia\n");
-	if(posicionado == NULL)
-		printf("ERROR posicionado null\n");
-	if(posicionado->quadrado == NULL)
-		printf("ERROR quadrado no posicionado null\n");
-
-
 	return !((i == 0 && cor_de_cima(posicionado) != 0) ||
 				   (j == 0 && cor_da_esquerda(posicionado) != 0) || 
 				   (i == N-1 && cor_de_baixo(posicionado) != 0) ||
@@ -36,9 +27,46 @@ void proxima_posicao(int i, int j, const int N, int *novo_i, int *novo_j) {
 		(*novo_i) = i+1;
 		(*novo_j) = 0;
 	}
-	printf("novos i e j: %d %d\n", *novo_i, *novo_j);
 }
 
+
+int testar_posicoes_com_um_quadrado(const int i, const int j, 
+																		const int i_novo, const int j_novo,
+																		PilhaQuadrado *pilha,
+																		QuadradoPosicionado *posicionado, 
+																		QuadradoPosicionado *tabuleiro[][MAXNUMBER],
+																		const int N) {
+	do {
+		if(posicao_valida(i, j, tabuleiro, posicionado, N) &&
+			 resolver(i_novo, j_novo, pilha->prox, tabuleiro, N)) {
+			apagar_pilha(pilha);
+			return TRUE;
+		}
+	} while(rotacionar(posicionado));
+	return FALSE;
+}
+
+int testar_com_quadrados_sobrando(const int i, const int j,
+																	const int i_novo, const int j_novo,
+																	PilhaQuadrado *pilha,
+																	QuadradoPosicionado *tabuleiro[][MAXNUMBER],
+																	const int N) {
+	int x =0;
+	int quadrados_sobrando = N*N - (i*N + j);
+	QuadradoPosicionado *posicionado;	
+	do {
+		posicionado = nova_posicao(pilha->quadrado, GRAU_0);
+		tabuleiro[i][j] = posicionado;
+
+		if(testar_posicoes_com_um_quadrado(i, j, i_novo, j_novo, pilha, posicionado, tabuleiro, N))
+			return TRUE;
+
+		free(posicionado);
+		pilha = trocar_quadrado(pilha);
+		x++;
+	} while(x<quadrados_sobrando);
+	return FALSE;
+}
 
 int resolver(const int i, const int j, 
 						PilhaQuadrado *pilha_antiga,
@@ -46,45 +74,17 @@ int resolver(const int i, const int j,
 						const int N)
 {
 
-	QuadradoPosicionado *posicionado;
 	int i_novo, j_novo;
-	int quadrados_sobrando = N*N - (i*N + j);
-	int x=0;
 	PilhaQuadrado *pilha;
 	
 	printf("posicao atual: %d %d\n", i, j);
-	printf("quadrados sobrando: %d - %d\n", quadrados_sobrando, contar_pilha(pilha_antiga));
 	if(i == N)
 		return TRUE;
 
 	pilha = copiar_pilha(pilha_antiga);
-	printf("copia: %d\n", contar_pilha(pilha));
 	proxima_posicao(i, j, N, &i_novo, &j_novo);	
-	do {
-		printf("entrou no do 1\n");
-		posicionado = nova_posicao(pilha->quadrado, GRAU_0);
-		printf("novo quadrado posicionado\n");
-		tabuleiro[i][j] = posicionado;
-		do {
-			printf("entrou no do 2\n");
-			if(posicao_valida(i, j, tabuleiro, posicionado, N) &&
-				 resolver(i_novo, j_novo, pilha->prox, tabuleiro, N)) {
-				apagar_pilha(pilha);
-				return TRUE;
-			}
-			printf("continuou\n");
-		} while(rotacionar(posicionado));
-		printf("não com essa peça\n");
-		free(posicionado);
-		printf("peça liberada do tabuleiro\n");
-		pilha = trocar_quadrado(pilha);
-		printf("trocando_quadrados");
-		x++;
-	} while(x<quadrados_sobrando);
-
-	printf("retornando FALSE\n");
-	return FALSE;
-
+	
+	return testar_com_quadrados_sobrando(i, j, i_novo, j_novo, pilha, tabuleiro, N);
 }
 
 
