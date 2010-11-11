@@ -123,7 +123,7 @@ int achar_peca_correta(const int i, const int j,
 	int q = qtdes[x];
 	QuadradoPosicionado *posicionado;
 	printf("x: %d q: %d, qtdes[x]:%d\n", x, q, qtdes[x]);
-	for(q++; q <= total-x ; q++)	{
+	for(q++; q <= (total-x) ; q++)	{
 		posicionado = nova_posicao(atual->quadrado, GRAU_0);
 		tabuleiro[i][j] = posicionado;
 		if(achar_posicao_correta(i, j, tabuleiro, posicionado, N)) {
@@ -156,7 +156,7 @@ int resolver_sequencialmente(PilhaQuadrado *pilha, QuadradoPosicionado *tabuleir
 	PilhaQuadrado *atual = pilha;
 	
 	zerar_vetor_a_partir(qtdes, 0, N);
-	while(atual != NULL) {
+	while(atual != NULL && x >= 0) {
 		proximo = FALSE;
 		printf("%d %d\n", i, j);		
 		if(achar_peca_correta(i, j, atual, tabuleiro, N, qtdes)) {
@@ -170,11 +170,15 @@ int resolver_sequencialmente(PilhaQuadrado *pilha, QuadradoPosicionado *tabuleir
 			printf("errado\n");
 			zerar_vetor_a_partir(qtdes, x, N);
 			x--;
+			if(x<0)
+				break;
 			index[x]->prox = atual;
 			atual = index[x];
 			posicao_anterior(i, j, N, &i, &j);
 		}
 	}
+	if(x<0)
+		return FALSE;
 	return TRUE;
 }
 

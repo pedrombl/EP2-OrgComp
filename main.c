@@ -52,5 +52,7 @@ int main() {
 		printf("resolvido!\n");
 		imprimir_resultado(tabuleiro, N);
 	}
+	else
+		printf("não foi possivel resolver o problema\n");
 	return 0;
 }
