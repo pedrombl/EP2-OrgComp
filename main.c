@@ -39,13 +39,13 @@ int main() {
 	int N;
 
 	pilha = ler_entrada(&N);
-	printf("------------resultado\n");
+	/*printf("------------resultado\n");
 	if(resolver(0, 0, pilha, tabuleiro, N)) {
 		printf("resolvido!\n");
 		imprimir_resultado(tabuleiro, N);
 	}
 	else
-		printf("não foi possivel resolver o problema\n");
+		printf("não foi possivel resolver o problema\n");*/
 
 	printf("\nSequecialmente:\n");
 	if(resolver_sequencialmente(pilha, tabuleiro, N)) {

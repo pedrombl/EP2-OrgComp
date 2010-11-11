@@ -4,6 +4,8 @@
 #include <stdlib.h>
 
 
+PilhaQuadrado *atual;
+
 int posicao_valida(const int i, const int j,
 									 QuadradoPosicionado *tabuleiro[][MAXNUMBER],
 									 QuadradoPosicionado *posicionado,
@@ -106,37 +108,31 @@ int achar_posicao_correta(const int i, const int j,
 
 	do {
 		if(posicao_valida(i, j, tabuleiro, posicionado, N)) {
-			printf("certo!!\n");			
 			return TRUE;
 		}
 	} while(rotacionar(posicionado));
-	printf("errado!!\n");	
 	return FALSE;
 }
 
 int achar_peca_correta(const int i, const int j, 
-											 PilhaQuadrado *atual, 
 											 QuadradoPosicionado *tabuleiro[][MAXNUMBER],
 											 const int N, int qtdes[]) {
 	const int x=(i*N) + j;
 	int total = N*N;
 	int q = qtdes[x];
 	QuadradoPosicionado *posicionado;
-	printf("x: %d q: %d, qtdes[x]:%d\n", x, q, qtdes[x]);
+
 	for(q++; q <= (total-x) ; q++)	{
 		posicionado = nova_posicao(atual->quadrado, GRAU_0);
 		tabuleiro[i][j] = posicionado;
 		if(achar_posicao_correta(i, j, tabuleiro, posicionado, N)) {
-			printf("certo!\n");
 			qtdes[x] = q;
 			return TRUE;
 		}
 		free(posicionado);
 		atual = trocar_quadrado(atual);
-		printf("%d\n", q);
 	}
 	qtdes[x] = q;
-	printf("errado!\n");
 	return FALSE;
 
 }
@@ -153,34 +149,34 @@ int resolver_sequencialmente(PilhaQuadrado *pilha, QuadradoPosicionado *tabuleir
 	int proximo, x=0;
 	int qtdes[MAXNUMBER*MAXNUMBER];
 	PilhaQuadrado *index[MAXNUMBER];
-	PilhaQuadrado *atual = pilha;
+	atual = pilha;
 	
 	zerar_vetor_a_partir(qtdes, 0, N);
-	while(atual != NULL && x >= 0) {
+	while(atual != NULL) {
 		proximo = FALSE;
-		printf("%d %d\n", i, j);		
-		if(achar_peca_correta(i, j, atual, tabuleiro, N, qtdes)) {
-			printf("certo\n");
+		if(achar_peca_correta(i, j, tabuleiro, N, qtdes)) {
 			index[x] = atual;
 			atual = atual->prox;
 			x++;
 			proxima_posicao(i, j, N, &i, &j);
 		}
 		else {
-			printf("errado\n");
 			zerar_vetor_a_partir(qtdes, x, N);
-			x--;
-			if(x<0)
-				break;
-			index[x]->prox = atual;
-			atual = index[x];
 			posicao_anterior(i, j, N, &i, &j);
+			if(i < 0)
+				return FALSE;
+			if(rotacionar(tabuleiro[i][j]) && achar_posicao_correta(i, j, tabuleiro, tabuleiro[i][j], N)) {
+				proxima_posicao(i, j, N, &i, &j);
+			}
+			else {
+				x--;
+				atual = index[x];
+				atual = trocar_quadrado(atual);
+				free(tabuleiro[i][j]);
+			}
 		}
 	}
-	if(x<0)
-		return FALSE;
 	return TRUE;
 }
-
 
 
